@@ -1,5 +1,5 @@
 <?php
-$cakeDescription = 'Tripway';
+$cakeDescription = 'Fintrack';
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,10 +27,11 @@ $cakeDescription = 'Tripway';
 
 <body>
   <nav class="top-nav">
-    <div class="top-nav-title">
-      <a><span>Fin</span>Track</a>
+    <div class="top-nav-inner">
+      <div class="top-nav-title">
+        <a><span>Fin</span>Track</a>
+      </div>
     </div>
-
   </nav>
   <main class="main">
     <div class="container">

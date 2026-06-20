@@ -7,6 +7,12 @@
 
 <?= $this->Form->control('password', ['label' => 'Senha']) ?>
 
-<?= $this->Form->button('Entrar') ?>
+<?= $this->Form->button('Entrar',   ['class' => 'button']) ?>
+
+<?= $this->Html->link(
+  'Criar conta',
+  ['controller' => 'Users', 'action' => 'add'],
+  ['class' => 'button']
+) ?>
 
 <?= $this->Form->end() ?>

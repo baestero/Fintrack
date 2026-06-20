@@ -59,7 +59,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         $service->loadIdentifier('Authentication.Password', [
             'fields' => [
-                IdentifierInterface::CREDENTIAL_USERNAME => 'email',
+                IdentifierInterface::CREDENTIAL_USERNAME => 'username',
                 IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
             ],
         ]);
@@ -68,7 +68,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         $service->loadAuthenticator('Authentication.Form', [
             'fields' => [
-                IdentifierInterface::CREDENTIAL_USERNAME => 'email',
+                IdentifierInterface::CREDENTIAL_USERNAME => 'username',
                 IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
             ],
             'loginUrl' => '/users/login',
