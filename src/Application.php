@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -14,6 +15,7 @@ declare(strict_types=1);
  * @since     3.3.0
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App;
 
 use Cake\Core\Configure;
@@ -27,6 +29,12 @@ use Cake\Http\MiddlewareQueue;
 use Cake\ORM\Locator\TableLocator;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Authentication\AuthenticationServiceInterface;
+use Authentication\AuthenticationServiceProviderInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Authentication\Middleware\AuthenticationMiddleware;
+use Authentication\AuthenticationService;
+use Authentication\Identifier\IdentifierInterface;
 
 /**
  * Application setup class.
@@ -34,16 +42,45 @@ use Cake\Routing\Middleware\RoutingMiddleware;
  * This defines the bootstrapping logic and middleware layers you
  * want to use in your application.
  */
-class Application extends BaseApplication
+class Application extends BaseApplication implements AuthenticationServiceProviderInterface
 {
-    /**
-     * Load all the application configuration and bootstrap logic.
-     *
-     * @return void
-     */
+
+    public function getAuthenticationService(
+        ServerRequestInterface $request
+    ): AuthenticationServiceInterface {
+        $service = new AuthenticationService();
+
+
+        $service->setConfig([
+            'unauthenticatedRedirect' => '/users/login',
+            'queryParam' => 'redirect',
+        ]);
+
+
+        $service->loadIdentifier('Authentication.Password', [
+            'fields' => [
+                IdentifierInterface::CREDENTIAL_USERNAME => 'email',
+                IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
+            ],
+        ]);
+
+        $service->loadAuthenticator('Authentication.Session');
+
+        $service->loadAuthenticator('Authentication.Form', [
+            'fields' => [
+                IdentifierInterface::CREDENTIAL_USERNAME => 'email',
+                IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
+            ],
+            'loginUrl' => '/users/login',
+        ]);
+
+        return $service;
+    }
+
+
+
     public function bootstrap(): void
     {
-        // Call parent to load bootstrap from files.
         parent::bootstrap();
 
         if (PHP_SAPI === 'cli') {
@@ -79,6 +116,8 @@ class Application extends BaseApplication
             // and make an error page/response
             ->add(new ErrorHandlerMiddleware(Configure::read('Error'), $this))
 
+            ->add(new AuthenticationMiddleware($this))
+
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware([
                 'cacheTime' => Configure::read('Asset.cacheTime'),
@@ -111,9 +150,7 @@ class Application extends BaseApplication
      * @return void
      * @link https://book.cakephp.org/4/en/development/dependency-injection.html#dependency-injection
      */
-    public function services(ContainerInterface $container): void
-    {
-    }
+    public function services(ContainerInterface $container): void {}
 
     /**
      * Bootstrapping for CLI application.
