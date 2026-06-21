@@ -64,11 +64,12 @@ a:active {
     color: #ffffff;
 }
 .top-nav-links a {
+    font-size: 1.25rem;
     color: #ffffff;
 }
 
 .top-nav-links a:hover {
-    color: #e5e7eb;
+    color: var(--danger);
 }
 /* Container principal */
 .content {

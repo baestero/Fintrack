@@ -27,10 +27,8 @@ class UsersController extends AppController
 
       if ($result->isValid()) {
 
-        $this->Flash->success(__('Login realizado com sucesso'));
         return $this->redirect('/');
       }
-
       $this->Flash->error('Usuário ou senha inválidos.');
     }
   }
