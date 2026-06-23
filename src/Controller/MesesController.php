@@ -47,18 +47,30 @@ class MesesController extends AppController
         $this->set(compact('mes'));
     }
 
-
-    public function setAtivo($id)
+    public function delete($id = null)
     {
-        $this->request->getSession()->write('Mes.ativo', $id);
+        $this->request->allowMethod(['post', 'delete']);
 
-        $this->Flash->success('Mes selecionado com sucesso');
+        $mes = $this->Meses->get($id);
 
-        return $this->redirect([
-            'controller' => 'Home',
-            'action' => 'index'
-        ]);
+        if ($this->Meses->delete($mes)) {
+            $this->Flash->success('Mês removido com sucesso.');
+        } else {
+            $this->Flash->error('Não foi possível remover o mês.');
+        }
+
+        return $this->redirect(['action' => 'index']);
     }
+
+    public function setAtivo()
+    {
+        $mesId = $this->request->getData('mes_id');
+
+        $this->request->getSession()->write('Mes.ativo', $mesId);
+
+        return $this->redirect(['controller' => 'Home', 'action' => 'index']);
+    }
+
 
 
     public function duplicar($id)

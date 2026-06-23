@@ -4,25 +4,60 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-
 class HomeController extends AppController
 {
-
     public function index()
     {
         $this->loadModel('Lancamentos');
         $this->loadModel('Meses');
 
-        $mesId = $this->request->getSession()->read('Mes.ativo');
+        // Lista de meses (select)
+        $meses = $this->Meses->find('list', [
+            'keyField' => 'id',
+            'valueField' => function ($row) {
+                return ucfirst(
+                    $row->data_referencia->i18nFormat('MMMM / yyyy')
+                );
+            }
+        ])->toArray();
+
+        $session = $this->request->getSession();
+        $mesId = $session->read('Mes.ativo');
 
         $mes = null;
         $receber = 0;
         $pagar = 0;
         $saldo = 0;
-        $lancamentos = [];
+        $lancamentosReceber = [];
+        $lancamentosPagar = [];
 
+        // 🔥 VALIDA SE O MÊS EXISTE
         if ($mesId) {
-            $mes = $this->Meses->get($mesId);
+            $mes = $this->Meses->find()
+                ->where(['id' => $mesId])
+                ->first();
+
+            // se não existir mais (foi deletado)
+            if (!$mes) {
+                $session->delete('Mes.ativo');
+                $mesId = null;
+            }
+        }
+
+        // 🔥 SE NÃO TEM MÊS VÁLIDO, PEGA O MAIS RECENTE
+        if (!$mes) {
+            $mes = $this->Meses->find()
+                ->orderDesc('id')
+                ->first();
+
+            if ($mes) {
+                $mesId = $mes->id;
+                $session->write('Mes.ativo', $mesId);
+            }
+        }
+
+
+        if ($mesId && $mes) {
 
             $receber = $this->Lancamentos->find()
                 ->where(['mes_id' => $mesId, 'tipo' => 'receber'])
@@ -34,8 +69,19 @@ class HomeController extends AppController
 
             $saldo = $receber - $pagar;
 
-            $lancamentos = $this->Lancamentos->find()
-                ->where(['mes_id' => $mesId])
+            $lancamentosReceber = $this->Lancamentos->find()
+                ->where([
+                    'mes_id' => $mesId,
+                    'tipo' => 'receber'
+                ])
+                ->order(['id' => 'ASC'])
+                ->toArray();
+
+            $lancamentosPagar = $this->Lancamentos->find()
+                ->where([
+                    'mes_id' => $mesId,
+                    'tipo' => 'pagar'
+                ])
                 ->order(['id' => 'ASC'])
                 ->toArray();
         }
@@ -44,8 +90,10 @@ class HomeController extends AppController
             'receber',
             'pagar',
             'saldo',
-            'lancamentos',
-            'mes'
+            'mes',
+            'meses',
+            'lancamentosReceber',
+            'lancamentosPagar'
         ));
     }
 }

@@ -4,32 +4,37 @@
 <table>
   <thead>
     <tr>
-      <th>ID</th>
       <th>Data Referência</th>
-      <th>Criado</th>
       <th>Ações</th>
     </tr>
   </thead>
 
   <tbody>
     <?php foreach ($meses as $mes): ?>
-    <tr>
-      <td><?= h($mes->id) ?></td>
+      <tr>
 
-      <td>
-        <?= date('m/Y', strtotime($mes->data_referencia)) ?>
-      </td>
+        <td>
+          <?= $mes->data_referencia->i18nFormat('MM/yyyy') ?>
+        </td>
 
-      <td><?= h($mes->created) ?></td>
 
-      <td>
-        <?= $this->Html->link(
+        <td>
+          <?= $this->Html->link(
             'Selecionar',
             ['action' => 'setAtivo', $mes->id],
             ['class' => 'button']
           ) ?>
-      </td>
-    </tr>
+
+          <?= $this->Form->postLink(
+            'Deletar',
+            ['action' => 'delete', $mes->id],
+            [
+              'confirm' => 'Tem certeza que deseja excluir este mês?',
+              'class' => 'button'
+            ]
+          ) ?>
+        </td>
+      </tr>
     <?php endforeach; ?>
   </tbody>
 </table>

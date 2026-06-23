@@ -1,18 +1,32 @@
-<h2>Resumo do mês</h2>
+<?= $this->Form->create(null, [
+  'url' => ['controller' => 'Meses', 'action' => 'setAtivo']
+]) ?>
 
-<h2>
+<h3>
   Mês ativo:
   <?= $mes ? h($mes->data_referencia) : 'Nenhum mês selecionado' ?>
-</h2>
+</h3>
+
+<?= $this->Form->control('mes_id', [
+  'type' => 'select',
+  'options' => $meses,
+  'value' => $mes ? $mes->id : null,
+  'label' => '',
+  'empty' => 'Nenhum mês selecionado — crie um mês para começar',
+  'onchange' => 'this.form.submit()'
+]) ?>
+
+<?= $this->Form->end() ?>
+
 
 <div style="display:flex; gap:30px;">
   <div>
-    <h3>💵 Receber</h3>
+    <h3>Receber</h3>
     <p>R$ <?= number_format($receber, 2, ',', '.') ?></p>
   </div>
 
   <div>
-    <h3>💸 Pagar</h3>
+    <h3>Pagar</h3>
     <p>R$ <?= number_format($pagar, 2, ',', '.') ?></p>
   </div>
 
@@ -24,7 +38,8 @@
 
 <hr>
 
-<h2>📋 Lançamentos do mês</h2>
+
+<h3>Lançamentos do mês</h3>
 
 <p>
   <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'add']) ?>">
@@ -32,37 +47,66 @@
   </a>
 </p>
 
+<hr>
+
+<h4>💸 A Pagar</h4>
+
 <table border="1" cellpadding="8">
   <tr>
     <th>Descrição</th>
-    <th>Tipo</th>
     <th>Valor</th>
     <th>Status</th>
     <th>Ações</th>
   </tr>
 
-  <?php foreach ($lancamentos as $l): ?>
-  <tr>
-    <td><?= h($l->descricao) ?></td>
-    <td><?= h($l->tipo) ?></td>
-    <td>R$ <?= number_format($l->valor, 2, ',', '.') ?></td>
-    <td><?= $l->status ?></td>
-    <td>
-      <?php if ($l->status !== 'concluido'): ?>
-      <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'concluir', $l->id]) ?>">
-        ✔ Pagar/Receber
-      </a>
-      <?php else: ?>
-      <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'reabrir', $l->id]) ?>">
-        ↩ Reabrir
-      </a>
-      <?php endif; ?>
+  <?php foreach ($lancamentosPagar as $l): ?>
+    <tr>
+      <td><?= h($l->descricao) ?></td>
+      <td>R$ <?= number_format($l->valor, 2, ',', '.') ?></td>
+      <td><?= h($l->status) ?></td>
+      <td>
+        <?php if ($l->status !== 'concluido'): ?>
+          <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'concluir', $l->id]) ?>">
+            ✔ Pagar
+          </a>
+        <?php else: ?>
+          <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'reabrir', $l->id]) ?>">
+            ↩ Reabrir
+          </a>
+        <?php endif; ?>
+      </td>
+    </tr>
+  <?php endforeach; ?>
+</table>
 
-      |
-      <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'edit', $l->id]) ?>">✏ Editar</a>
-      |
-      <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'delete', $l->id]) ?>">🗑</a>
-    </td>
+<hr>
+
+<h4>💰 A Receber</h4>
+
+<table border="1" cellpadding="8">
+  <tr>
+    <th>Descrição</th>
+    <th>Valor</th>
+    <th>Status</th>
+    <th>Ações</th>
   </tr>
+
+  <?php foreach ($lancamentosReceber as $l): ?>
+    <tr>
+      <td><?= h($l->descricao) ?></td>
+      <td>R$ <?= number_format($l->valor, 2, ',', '.') ?></td>
+      <td><?= h($l->status) ?></td>
+      <td>
+        <?php if ($l->status !== 'concluido'): ?>
+          <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'concluir', $l->id]) ?>">
+            ✔ Receber
+          </a>
+        <?php else: ?>
+          <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'reabrir', $l->id]) ?>">
+            ↩ Reabrir
+          </a>
+        <?php endif; ?>
+      </td>
+    </tr>
   <?php endforeach; ?>
 </table>
