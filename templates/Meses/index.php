@@ -1,4 +1,4 @@
-<h1>Meses</h1>
+<h2>Meses</h2>
 <a href="/meses/add" class="button">+</a>
 
 <table>

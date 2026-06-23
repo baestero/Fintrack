@@ -15,7 +15,16 @@ class MesesController extends AppController
         $meses = $this->Meses->find()
             ->order(['data_referencia' => 'DESC']);
 
-        $this->set(compact('meses'));
+        $mesesNavbar = $this->Meses->find('list', [
+            'keyField' => 'id',
+            'valueField' => function ($row) {
+                return ucfirst(
+                    $row->data_referencia->i18nFormat('MMMM / yyyy')
+                );
+            }
+        ])->toArray();
+
+        $this->set(compact('meses', 'mesesNavbar'));
     }
     public function add()
     {

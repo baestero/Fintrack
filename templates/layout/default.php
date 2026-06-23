@@ -1,5 +1,4 @@
 <?php
-
 $cakeDescription = 'Fintrack';
 ?>
 <!DOCTYPE html>
@@ -12,7 +11,12 @@ $cakeDescription = 'Fintrack';
     <?= $cakeDescription ?>:
     <?= $this->fetch('title') ?>
   </title>
-  <?= $this->Html->meta('icon') ?>
+
+  <?= $this->Html->meta(
+    'icon',
+    '/img/logo.svg',
+    ['type' => 'image/svg+xml']
+  ) ?>
 
   <?= $this->Html->css(['normalize.min', 'milligram.min', 'fonts', 'cake']) ?>
 
@@ -25,19 +29,15 @@ $cakeDescription = 'Fintrack';
   <nav class="top-nav">
     <div class="top-nav-inner">
       <div class="top-nav-title">
-        <a href="/"><span>Fin</span>Track</a>
+        <a href='/'><span>Fin</span>Track</a>
       </div>
-
-      <div class="top-nav-links">
-        <?= $this->Html->link(
-          'Meses',
-          ['controller' => 'Meses', 'action' => 'index']
-        ) ?>
+      <div>
         <?= $this->Html->link(
           'Sair',
           ['controller' => 'Users', 'action' => 'logout']
         ) ?>
       </div>
+    </div>
   </nav>
   <main class="main">
     <div class="container">

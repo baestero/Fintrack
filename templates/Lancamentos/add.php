@@ -1,4 +1,4 @@
-<h1>Novo Lançamento</h1>
+<h3>Novo Lançamento</h3>
 
 <?= $this->Form->create($lancamento) ?>
 

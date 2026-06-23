@@ -11,6 +11,8 @@ class HomeController extends AppController
         $this->loadModel('Lancamentos');
         $this->loadModel('Meses');
 
+        $this->viewBuilder()->setLayout('home');
+
         // Lista de meses (select)
         $meses = $this->Meses->find('list', [
             'keyField' => 'id',
