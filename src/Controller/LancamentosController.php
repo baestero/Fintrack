@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-
 class LancamentosController extends AppController
 {
-
     public function index()
     {
-        $this->loadModel('Lancamentos');
+        $lancamentosTable = $this->fetchTable('Lancamentos');
 
         $mesId = $this->request->getSession()->read('Mes.ativo');
 
-        $lancamentos = $this->Lancamentos->find()
+        $lancamentos = $lancamentosTable->find()
             ->where(['mes_id' => $mesId])
             ->order(['id' => 'ASC']);
 
@@ -23,37 +21,44 @@ class LancamentosController extends AppController
 
     public function add()
     {
-        $this->loadModel('Lancamentos');
+        $lancamentosTable = $this->fetchTable('Lancamentos');
 
-        $lancamento = $this->Lancamentos->newEmptyEntity();
+        $lancamento = $lancamentosTable->newEmptyEntity();
 
         if ($this->request->is('post')) {
 
             $data = $this->request->getData();
 
-            $data['mes_id'] = $this->request->getSession()->read('Mes.ativo');
             $mesAtivo = $this->request->getSession()->read('Mes.ativo');
 
             if (!$mesAtivo) {
                 $this->Flash->error('Selecione um mês antes de criar lançamentos');
-                return $this->redirect(['controller' => 'Meses', 'action' => 'index']);
+
+                return $this->redirect([
+                    'controller' => 'Meses',
+                    'action' => 'index'
+                ]);
             }
 
             $data['mes_id'] = $mesAtivo;
             $data['recorrente'] = !empty($data['recorrente']) ? 1 : 0;
-            $data['valor'] = (float) $data['valor'];
+            $data['valor'] = (float)$data['valor'];
             $data['concluido'] = false;
 
+            $lancamento = $lancamentosTable->patchEntity(
+                $lancamento,
+                $data
+            );
 
-            $lancamento = $this->Lancamentos->patchEntity($lancamento, $data);
-
-            if ($this->Lancamentos->save($lancamento)) {
+            if ($lancamentosTable->save($lancamento)) {
                 $this->Flash->success('Lançamento criado');
-                return $this->redirect(['controller' => 'Home']);
+
+                return $this->redirect([
+                    'controller' => 'Home'
+                ]);
             }
 
             $this->Flash->error('Erro ao salvar');
-            debug($lancamento->getErrors());
         }
 
         $this->set(compact('lancamento'));
@@ -61,20 +66,23 @@ class LancamentosController extends AppController
 
     public function edit($id)
     {
-        $this->loadModel('Lancamentos');
+        $lancamentosTable = $this->fetchTable('Lancamentos');
 
-        $lancamento = $this->Lancamentos->get($id);
+        $lancamento = $lancamentosTable->get($id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
 
-            $lancamento = $this->Lancamentos->patchEntity(
+            $lancamento = $lancamentosTable->patchEntity(
                 $lancamento,
                 $this->request->getData()
             );
 
-            if ($this->Lancamentos->save($lancamento)) {
+            if ($lancamentosTable->save($lancamento)) {
                 $this->Flash->success('Lançamento atualizado');
-                return $this->redirect(['controller' => 'Home']);
+
+                return $this->redirect([
+                    'controller' => 'Home'
+                ]);
             }
 
             $this->Flash->error('Erro ao atualizar');
@@ -83,49 +91,54 @@ class LancamentosController extends AppController
         $this->set(compact('lancamento'));
     }
 
-
     public function delete($id)
     {
         $this->request->allowMethod(['post', 'delete']);
 
-        $this->loadModel('Lancamentos');
+        $lancamentosTable = $this->fetchTable('Lancamentos');
 
-        $lancamento = $this->Lancamentos->get($id);
+        $lancamento = $lancamentosTable->get($id);
 
-        if ($this->Lancamentos->delete($lancamento)) {
+        if ($lancamentosTable->delete($lancamento)) {
             $this->Flash->success('Lançamento removido');
         } else {
             $this->Flash->error('Erro ao remover');
         }
 
-        return $this->redirect(['controller' => 'Home']);
+        return $this->redirect([
+            'controller' => 'Home'
+        ]);
     }
 
     public function concluir($id)
     {
-        $this->loadModel('Lancamentos');
+        $lancamentosTable = $this->fetchTable('Lancamentos');
 
-        $lancamento = $this->Lancamentos->get($id);
+        $lancamento = $lancamentosTable->get($id);
 
         $lancamento->concluido = true;
         $lancamento->data_pagamento = date('Y-m-d');
 
-        $this->Lancamentos->save($lancamento);
+        $lancamentosTable->save($lancamento);
 
-        return $this->redirect(['controller' => 'Home']);
+        return $this->redirect([
+            'controller' => 'Home'
+        ]);
     }
 
     public function reabrir($id)
     {
-        $this->loadModel('Lancamentos');
+        $lancamentosTable = $this->fetchTable('Lancamentos');
 
-        $lancamento = $this->Lancamentos->get($id);
+        $lancamento = $lancamentosTable->get($id);
 
         $lancamento->concluido = false;
         $lancamento->data_pagamento = null;
 
-        $this->Lancamentos->save($lancamento);
+        $lancamentosTable->save($lancamento);
 
-        return $this->redirect(['controller' => 'Home']);
+        return $this->redirect([
+            'controller' => 'Home'
+        ]);
     }
 }

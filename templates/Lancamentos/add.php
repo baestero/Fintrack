@@ -1,6 +1,6 @@
-<?= $this->Html->css('lancamentos', ['block' => true]); ?>
-
 <h3>Novo Lançamento</h3>
+
+<?= $this->Html->css('lancamentos', ['block' => true]); ?>
 
 <?= $this->Form->create($lancamento) ?>
 

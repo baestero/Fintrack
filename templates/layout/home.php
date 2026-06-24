@@ -12,7 +12,13 @@ $cakeDescription = 'Fintrack';
     <?= $cakeDescription ?>:
     <?= $this->fetch('title') ?>
   </title>
-  <?= $this->Html->meta('icon') ?>
+
+  <?= $this->Html->meta(
+    'icon',
+    '/img/finance.svg',
+    ['type' => 'image/svg+xml']
+  ) ?>
+
 
   <?= $this->Html->css(['normalize.min', 'milligram.min', 'fonts', 'cake']) ?>
 

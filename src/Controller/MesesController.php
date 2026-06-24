@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-
 class MesesController extends AppController
 {
-
     public function index()
     {
-        $this->loadModel('Meses');
+        $mesesTable = $this->fetchTable('Meses');
 
-        $meses = $this->Meses->find()
+        $meses = $mesesTable->find()
             ->order(['data_referencia' => 'DESC']);
 
-        $mesesNavbar = $this->Meses->find('list', [
+        $mesesNavbar = $mesesTable->find('list', [
             'keyField' => 'id',
             'valueField' => function ($row) {
                 return ucfirst(
@@ -26,9 +24,12 @@ class MesesController extends AppController
 
         $this->set(compact('meses', 'mesesNavbar'));
     }
+
     public function add()
     {
-        $mes = $this->Meses->newEmptyEntity();
+        $mesesTable = $this->fetchTable('Meses');
+
+        $mes = $mesesTable->newEmptyEntity();
 
         if ($this->request->is('post')) {
 
@@ -40,13 +41,14 @@ class MesesController extends AppController
                 $data['mes']
             );
 
-            $mes = $this->Meses->patchEntity($mes, [
+            $mes = $mesesTable->patchEntity($mes, [
                 'user_id' => $this->Authentication->getIdentity()->get('id'),
                 'data_referencia' => $dataReferencia
             ]);
 
-            if ($this->Meses->save($mes)) {
+            if ($mesesTable->save($mes)) {
                 $this->Flash->success('Mês criado com sucesso');
+
                 return $this->redirect(['action' => 'index']);
             }
 
@@ -60,9 +62,11 @@ class MesesController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
 
-        $mes = $this->Meses->get($id);
+        $mesesTable = $this->fetchTable('Meses');
 
-        if ($this->Meses->delete($mes)) {
+        $mes = $mesesTable->get($id);
+
+        if ($mesesTable->delete($mes)) {
             $this->Flash->success('Mês removido com sucesso.');
         } else {
             $this->Flash->error('Não foi possível remover o mês.');
@@ -77,45 +81,50 @@ class MesesController extends AppController
 
         $this->request->getSession()->write('Mes.ativo', $mesId);
 
-        return $this->redirect(['controller' => 'Home', 'action' => 'index']);
+        return $this->redirect([
+            'controller' => 'Home',
+            'action' => 'index'
+        ]);
     }
-
-
 
     public function duplicar($id)
     {
-        $this->loadModel('Lancamentos');
+        $mesesTable = $this->fetchTable('Meses');
+        $lancamentosTable = $this->fetchTable('Lancamentos');
 
-        $mesAtual = $this->Meses->get($id, [
+        $mesAtual = $mesesTable->get($id, [
             'contain' => ['Lancamentos']
         ]);
 
-        // cria novo mês (+1 mês)
-        $novaData = (new \DateTime($mesAtual->data_referencia))
+        $novaData = (new \DateTime($mesAtual->data_referencia->format('Y-m-d')))
             ->modify('+1 month')
             ->format('Y-m-01');
 
-        $novoMes = $this->Meses->newEntity([
+        $novoMes = $mesesTable->newEntity([
             'user_id' => $mesAtual->user_id,
             'data_referencia' => $novaData
         ]);
 
-        $this->Meses->save($novoMes);
+        if (!$mesesTable->save($novoMes)) {
+            $this->Flash->error('Erro ao criar o novo mês');
 
-        // copia lançamentos
+            return $this->redirect(['action' => 'index']);
+        }
+
         foreach ($mesAtual->lancamentos as $l) {
 
-            $novoLancamento = $this->Lancamentos->newEntity([
+            $novoLancamento = $lancamentosTable->newEntity([
                 'mes_id' => $novoMes->id,
                 'tipo' => $l->tipo,
                 'descricao' => $l->descricao,
                 'valor' => $l->valor,
                 'observacao' => $l->observacao,
                 'recorrente' => $l->recorrente,
-                'status' => 'pendente'
+                'concluido' => false,
+                'data_pagamento' => null
             ]);
 
-            $this->Lancamentos->save($novoLancamento);
+            $lancamentosTable->save($novoLancamento);
         }
 
         $this->Flash->success('Mês duplicado com sucesso');
@@ -125,7 +134,9 @@ class MesesController extends AppController
 
     public function view($id)
     {
-        $mes = $this->Meses->get($id, [
+        $mesesTable = $this->fetchTable('Meses');
+
+        $mes = $mesesTable->get($id, [
             'contain' => ['Lancamentos']
         ]);
 

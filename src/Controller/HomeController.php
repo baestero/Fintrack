@@ -8,13 +8,13 @@ class HomeController extends AppController
 {
     public function index()
     {
-        $this->loadModel('Lancamentos');
-        $this->loadModel('Meses');
+        $lancamentosTable = $this->fetchTable('Lancamentos');
+        $mesesTable = $this->fetchTable('Meses');
 
         $this->viewBuilder()->setLayout('home');
 
         // Lista de meses (select)
-        $meses = $this->Meses->find('list', [
+        $meses = $mesesTable->find('list', [
             'keyField' => 'id',
             'valueField' => function ($row) {
                 return ucfirst(
@@ -33,22 +33,21 @@ class HomeController extends AppController
         $lancamentosReceber = [];
         $lancamentosPagar = [];
 
-        // VALIDA SE O MÊS EXISTE
+        // Valida se o mês existe
         if ($mesId) {
-            $mes = $this->Meses->find()
+            $mes = $mesesTable->find()
                 ->where(['id' => $mesId])
                 ->first();
 
-            // se não existir mais (foi deletado)
             if (!$mes) {
                 $session->delete('Mes.ativo');
                 $mesId = null;
             }
         }
 
-        //  SE NÃO TEM MÊS VÁLIDO, PEGA O MAIS RECENTE
+        // Se não tem mês válido, pega o mais recente
         if (!$mes) {
-            $mes = $this->Meses->find()
+            $mes = $mesesTable->find()
                 ->orderDesc('id')
                 ->first();
 
@@ -58,10 +57,9 @@ class HomeController extends AppController
             }
         }
 
-
         if ($mesId && $mes) {
 
-            $receber = $this->Lancamentos->find()
+            $receber = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
                     'tipo' => 'receber',
@@ -69,7 +67,7 @@ class HomeController extends AppController
                 ])
                 ->sumOf('valor');
 
-            $pagar = $this->Lancamentos->find()
+            $pagar = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
                     'tipo' => 'pagar',
@@ -79,7 +77,7 @@ class HomeController extends AppController
 
             $saldo = $receber - $pagar;
 
-            $lancamentosReceber = $this->Lancamentos->find()
+            $lancamentosReceber = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
                     'tipo' => 'receber'
@@ -87,7 +85,7 @@ class HomeController extends AppController
                 ->order(['id' => 'ASC'])
                 ->toArray();
 
-            $lancamentosPagar = $this->Lancamentos->find()
+            $lancamentosPagar = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
                     'tipo' => 'pagar'

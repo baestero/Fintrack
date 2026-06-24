@@ -10,12 +10,11 @@ $cakeDescription = 'Fintrack';
   <title>
     <?= $cakeDescription ?>:
     <?= $this->fetch('title') ?>
-    $this->Html->css('login', ['block' => true]);
   </title>
 
   <?= $this->Html->meta(
     'icon',
-    '/img/logo.svg',
+    '/img/finance.svg',
     ['type' => 'image/svg+xml']
   ) ?>
 
