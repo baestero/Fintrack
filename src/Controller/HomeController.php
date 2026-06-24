@@ -6,7 +6,6 @@ namespace App\Controller;
 
 class HomeController extends AppController
 {
-
     public function index()
     {
         $lancamentosTable = $this->fetchTable('Lancamentos');
@@ -65,7 +64,6 @@ class HomeController extends AppController
             $receber = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
-                    'user_id' => $userId,
                     'tipo' => 'receber',
                     'concluido' => false
                 ])
@@ -75,7 +73,6 @@ class HomeController extends AppController
             $pagar = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
-                    'user_id' => $userId,
                     'tipo' => 'pagar',
                     'concluido' => false
                 ])
@@ -87,7 +84,6 @@ class HomeController extends AppController
             $lancamentosReceber = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
-                    'user_id' => $userId,
                     'tipo' => 'receber'
                 ])
                 ->order(['id' => 'ASC'])
@@ -96,7 +92,6 @@ class HomeController extends AppController
             $lancamentosPagar = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
-                    'user_id' => $userId,
                     'tipo' => 'pagar'
                 ])
                 ->order(['id' => 'ASC'])
