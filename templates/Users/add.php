@@ -7,15 +7,22 @@
 
 ?>
 
+<?= $this->Html->css('login', ['block' => true]); ?>
+
+
+<div class="login-container">
+  <h2>Sua vida financeira sob controle.</h2>
+  <h4>Cadastre-se</h4>
+</div>
+
 <?= $this->Form->create($user) ?>
-<fieldset>
-  <legend><?= __('Cadastrar Usuário') ?></legend>
-  <?php
-  echo $this->Form->control('username', ['label' => 'Usuário:']);
-  echo $this->Form->control('password', [
-    'label' => 'Senha'
-  ]);
-  ?>
+
+<?php
+echo $this->Form->control('username', ['label' => 'Usuário']);
+echo $this->Form->control('password', [
+  'label' => 'Senha'
+]);
+?>
 </fieldset>
 <?= $this->Form->button(__('Cadastrar')) ?>
 <?= $this->Form->end() ?>
