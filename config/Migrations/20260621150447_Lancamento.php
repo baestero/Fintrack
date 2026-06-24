@@ -2,47 +2,116 @@
 
 declare(strict_types=1);
 
-use Migrations\AbstractMigration;
+namespace App\Controller;
 
-class Lancamento extends AbstractMigration
+class HomeController extends AppController
 {
-
-    public function change(): void
+    public function index()
     {
+        $lancamentosTable = $this->fetchTable('Lancamentos');
+        $mesesTable = $this->fetchTable('Meses');
 
-        $table = $this->table('lancamentos');
+        $this->viewBuilder()->setLayout('home');
 
-        $table->addColumn('mes_id', 'integer', [
-            'null' => false
-        ]);
-        $table->addColumn('tipo', 'string', [
-            'null' => false,
-            'limit' => 20
-        ]);
-        $table->addColumn('descricao', 'string', [
-            'null' => false,
-            'limit' => 200
-        ]);
+        $userId = $this->request->getAttribute('identity')->get('id');
 
-        $table->addColumn('concluido', 'boolean', [
-            'default' => false
-        ]);
+        // Lista de meses do usuário logado (select)
+        $meses = $mesesTable->find('list', [
+            'keyField' => 'id',
+            'valueField' => function ($row) {
+                return ucfirst(
+                    $row->data_referencia->i18nFormat('MMMM / yyyy')
+                );
+            }
+        ])
+            ->where(['user_id' => $userId])
+            ->toArray();
 
-        $table->addColumn('valor', 'decimal', [
-            'precision' => 10,
-            'scale' => 2,
-            'null' => false
+        $session = $this->request->getSession();
+        $mesId = $session->read('Mes.ativo');
 
-        ]);
-        $table->addColumn('observacao', 'text', [
-            'null' => false
-        ]);
-        $table->addColumn('recorrente', 'boolean', [
-            'default' => false
-        ]);
+        $mes = null;
+        $receber = 0;
+        $pagar = 0;
+        $saldo = 0;
+        $lancamentosReceber = [];
+        $lancamentosPagar = [];
 
-        $table->addForeignKey('mes_id', 'meses', 'id');
-        $table->addTimestamps();
-        $table->create();
+        // Valida se o mês existe E pertence ao usuário logado
+        if ($mesId) {
+            $mes = $mesesTable->find()
+                ->where([
+                    'id' => $mesId,
+                    'user_id' => $userId
+                ])
+                ->first();
+
+            if (!$mes) {
+                $session->delete('Mes.ativo');
+                $mesId = null;
+            }
+        }
+
+        // Se não tem mês válido, pega o mais recente do usuário logado
+        if (!$mes) {
+            $mes = $mesesTable->find()
+                ->where(['user_id' => $userId])
+                ->orderDesc('id')
+                ->first();
+
+            if ($mes) {
+                $mesId = $mes->id;
+                $session->write('Mes.ativo', $mesId);
+            }
+        }
+
+        if ($mesId && $mes) {
+
+            $receber = $lancamentosTable->find()
+                ->where([
+                    'mes_id' => $mesId,
+                    'tipo' => 'receber',
+                    'concluido' => false
+                ])
+                ->all()
+                ->sumOf('valor');
+
+            $pagar = $lancamentosTable->find()
+                ->where([
+                    'mes_id' => $mesId,
+                    'tipo' => 'pagar',
+                    'concluido' => false
+                ])
+                ->all()
+                ->sumOf('valor');
+
+            $saldo = $receber - $pagar;
+
+            $lancamentosReceber = $lancamentosTable->find()
+                ->where([
+                    'mes_id' => $mesId,
+                    'tipo' => 'receber'
+                ])
+                ->order(['id' => 'ASC'])
+                ->toArray();
+
+            $lancamentosPagar = $lancamentosTable->find()
+                ->where([
+                    'mes_id' => $mesId,
+                    'tipo' => 'pagar'
+                ])
+                ->order(['id' => 'ASC'])
+                ->toArray();
+        }
+
+        $this->set(compact(
+            'receber',
+            'pagar',
+            'saldo',
+            'mes',
+            'meses',
+            'lancamentosReceber',
+            'lancamentosPagar'
+        ));
     }
 }

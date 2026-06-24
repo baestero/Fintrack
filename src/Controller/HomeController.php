@@ -65,6 +65,7 @@ class HomeController extends AppController
                     'tipo' => 'receber',
                     'concluido' => false
                 ])
+                ->all()
                 ->sumOf('valor');
 
             $pagar = $lancamentosTable->find()
@@ -73,6 +74,7 @@ class HomeController extends AppController
                     'tipo' => 'pagar',
                     'concluido' => false
                 ])
+                ->all()
                 ->sumOf('valor');
 
             $saldo = $receber - $pagar;
