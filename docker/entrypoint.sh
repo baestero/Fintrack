@@ -1,4 +1,3 @@
-#!/bin/sh
 set -e
 
 cat > /var/www/html/config/app_local.php << 'PHPEOF'
@@ -8,7 +7,7 @@ return [
     'Security' => [
         'salt' => env('SECURITY_SALT', 'default-salt-value'),
     ],
-   'Datasources' => [
+    'Datasources' => [
         'default' => [
             'className' => 'Cake\Database\Connection',
             'driver' => 'Cake\Database\Driver\Postgres',
@@ -16,7 +15,7 @@ return [
             'username' => env('DB_USER', ''),
             'password' => env('DB_PASSWORD', ''),
             'database' => env('DB_DATABASE', ''),
-            'port' => env('DB_PORT', '),
+            'port' => env('DB_PORT', '5432'),
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'cacheMetadata' => true,
@@ -29,10 +28,10 @@ return [
             'init' => [
                 'SET timezone = UTC',
             ],
-
             'ssl_mode' => 'require',
             'ssl_ca' => null,
         ],
+    ],  
 ];
 PHPEOF
 
