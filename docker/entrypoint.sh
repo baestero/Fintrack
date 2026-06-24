@@ -4,7 +4,7 @@ set -e
 cat > /var/www/html/config/app_local.php << 'PHPEOF'
 <?php
 return [
-    'debug' => false,
+    'debug' => true,
     'Security' => [
         'salt' => env('SECURITY_SALT', 'default-salt-value'),
     ],
