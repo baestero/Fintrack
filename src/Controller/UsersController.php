@@ -50,6 +50,13 @@ class UsersController extends AppController
 
     if ($this->request->is('post')) {
       try {
+        $conn = $this->Users->getConnection();
+        $conn->execute('ROLLBACK')->closeCursor();
+      } catch (\Exception $e) {
+        // ignora
+      }
+
+      try {
         $user = $this->Users->patchEntity($user, $this->request->getData());
 
         if ($this->Users->save($user)) {
