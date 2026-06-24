@@ -54,12 +54,6 @@ class UsersController extends AppController
 
       $user = $this->Users->patchEntity($user, $this->request->getData());
 
-
-      debug($user->getErrors());
-      debug($user);
-      die;
-
-
       if ($this->Users->save($user)) {
 
         $this->Flash->success(__('Usuário cadastrado com sucesso.'));
