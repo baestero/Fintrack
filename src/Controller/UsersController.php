@@ -57,7 +57,12 @@ class UsersController extends AppController
         }
         $this->Flash->error(json_encode($user->getErrors()));
       } catch (\Exception $e) {
-        $this->Flash->error($e->getMessage() . ' | ' . $e->getFile() . ':' . $e->getLine());
+        $previous = $e->getPrevious();
+        $msg = $e->getMessage();
+        if ($previous) {
+          $msg .= ' | CAUSA: ' . $previous->getMessage();
+        }
+        $this->Flash->error($msg);
       }
     }
 
