@@ -50,15 +50,13 @@ class UsersController extends AppController
 
     if ($this->request->is('post')) {
       try {
-
-        $this->Flash->error('SELECT ok. Total users: ' . $this->Users->find()->count());
-        return;
-
         $user = $this->Users->patchEntity($user, $this->request->getData());
+
         if ($this->Users->save($user)) {
           $this->Flash->success(__('Usuário cadastrado com sucesso.'));
           return $this->redirect(['action' => 'login']);
         }
+
         $this->Flash->error(json_encode($user->getErrors()));
       } catch (\Exception $e) {
         $previous = $e->getPrevious();
