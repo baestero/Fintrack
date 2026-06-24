@@ -36,11 +36,11 @@ return [
 ];
 PHPEOF
 
-echo "==> Running migrations..."
+echo "==> Running migrations.."
 bin/cake migrations migrate -c default || true
 
-echo "==> Dumping schema..."
+echo "==> Dumping schema.."
 bin/cake migrations dump -c default || true
 
-echo "==> Starting Apache..."
+echo "==> Starting Apache.."
 apache2-foreground
