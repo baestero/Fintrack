@@ -50,14 +50,15 @@ class UsersController extends AppController
     $user = $this->Users->newEmptyEntity();
 
 
-    debug($user->getErrors());
-    debug($user);
-    die;
-
-
     if ($this->request->is('post')) {
 
       $user = $this->Users->patchEntity($user, $this->request->getData());
+
+
+      debug($user->getErrors());
+      debug($user);
+      die;
+
 
       if ($this->Users->save($user)) {
 
