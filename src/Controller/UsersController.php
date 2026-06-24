@@ -53,11 +53,15 @@ class UsersController extends AppController
 
       $user = $this->Users->patchEntity($user, $this->request->getData());
 
+
       if ($this->Users->save($user)) {
 
         $this->Flash->success(__('Usuário cadastrado com sucesso.'));
 
         return $this->redirect(['action' => 'login']);
+      }
+      if (!$this->Users->save($user)) {
+        Log::error(json_encode($user->getErrors()));
       }
       $this->Flash->error(__('Não foi possível cadastrar usuário, verifique os erros abaixo.'));
     }
