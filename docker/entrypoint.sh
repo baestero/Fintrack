@@ -20,6 +20,10 @@ return [
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'cacheMetadata' => true,
+            'flags' => [
+                \PDO::ATTR_PERSISTENT => false,
+            ],
+            'init' => ['SET timezone = UTC'],
         ],
     ],
 ];
@@ -27,6 +31,9 @@ PHPEOF
 
 echo "==> Running migrations..."
 bin/cake migrations migrate -c default || true
+
+echo "==> Dumping schema..."
+bin/cake migrations dump -c default || true
 
 echo "==> Starting Apache..."
 apache2-foreground

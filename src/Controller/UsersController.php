@@ -50,6 +50,10 @@ class UsersController extends AppController
 
     if ($this->request->is('post')) {
       try {
+
+        $this->Flash->error('SELECT ok. Total users: ' . $this->Users->find()->count());
+        return;
+
         $user = $this->Users->patchEntity($user, $this->request->getData());
         if ($this->Users->save($user)) {
           $this->Flash->success(__('Usuário cadastrado com sucesso.'));
@@ -62,7 +66,7 @@ class UsersController extends AppController
         if ($previous) {
           $msg .= ' | CAUSA: ' . $previous->getMessage();
         }
-        $this->Flash->error($msg);
+        $this->Flash->error('ERRO: ' . $msg);
       }
     }
 
