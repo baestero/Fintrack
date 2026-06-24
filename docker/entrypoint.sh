@@ -8,24 +8,31 @@ return [
     'Security' => [
         'salt' => env('SECURITY_SALT', 'default-salt-value'),
     ],
-    'Datasources' => [
+   'Datasources' => [
         'default' => [
             'className' => 'Cake\Database\Connection',
             'driver' => 'Cake\Database\Driver\Postgres',
-            'host' => env('DB_HOST', 'localhost'),
-            'username' => env('DB_USER', ''),
-            'password' => env('DB_PASSWORD', ''),
-            'database' => env('DB_DATABASE', ''),
+            'host' => env('DB_HOST', 'ep-autumn-river-atq1ntuz-pooler.c-9.us-east-1.aws.neon.tech'),
+            'username' => env('DB_USER', 'neondb_owner'),
+            'password' => env('DB_PASSWORD', 'npg_JIDQbmaWV40S'),
+            'database' => env('DB_DATABASE', 'neondb'),
             'port' => env('DB_PORT', '5432'),
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'cacheMetadata' => true,
+            'persistent' => false,
+            'quoteIdentifiers' => true,
             'flags' => [
                 \PDO::ATTR_PERSISTENT => false,
+                \PDO::PGSQL_ATTR_DISABLE_PREPARES => true,
             ],
-            'init' => ['SET timezone = UTC'],
+            'init' => [
+                'SET timezone = UTC',
+            ],
+
+            'ssl_mode' => 'require',
+            'ssl_ca' => null,
         ],
-    ],
 ];
 PHPEOF
 

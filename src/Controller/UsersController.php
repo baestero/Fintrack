@@ -46,32 +46,24 @@ class UsersController extends AppController
   public function add()
   {
     $this->viewBuilder()->setLayout('login');
+
     $user = $this->Users->newEmptyEntity();
 
     if ($this->request->is('post')) {
-      try {
-        $conn = $this->Users->getConnection();
-        $conn->execute('ROLLBACK')->closeCursor();
-      } catch (\Exception $e) {
-        // ignora
+
+      $data = $this->request->getData();
+
+      $user = $this->Users->patchEntity($user, $data);
+
+      if ($this->Users->exists(['username' => $this->request->getData('username')])) {
+        $this->Flash->error('Username já está em uso.');
+        $this->set(compact('user'));
+        return;
       }
 
-      try {
-        $user = $this->Users->patchEntity($user, $this->request->getData());
-
-        if ($this->Users->save($user)) {
-          $this->Flash->success(__('Usuário cadastrado com sucesso.'));
-          return $this->redirect(['action' => 'login']);
-        }
-
-        $this->Flash->error(json_encode($user->getErrors()));
-      } catch (\Exception $e) {
-        $previous = $e->getPrevious();
-        $msg = $e->getMessage();
-        if ($previous) {
-          $msg .= ' | CAUSA: ' . $previous->getMessage();
-        }
-        $this->Flash->error('ERRO: ' . $msg);
+      if ($this->Users->save($user)) {
+        $this->Flash->success(__('Usuário cadastrado com sucesso.'));
+        return $this->redirect(['action' => 'login']);
       }
     }
 
