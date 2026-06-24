@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Entity;
@@ -14,7 +15,6 @@ use Cake\ORM\Entity;
  * @property string $descricao
  * @property bool $concluido
  * @property string $valor
- * @property string $observacao
  * @property bool $recorrente
  * @property \Cake\I18n\FrozenTime $created_at
  * @property \Cake\I18n\FrozenTime|null $updated_at
@@ -38,7 +38,6 @@ class Lancamento extends Entity
         'descricao' => true,
         'concluido' => true,
         'valor' => true,
-        'observacao' => true,
         'recorrente' => true,
         'created_at' => true,
         'updated_at' => true,

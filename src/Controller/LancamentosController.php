@@ -50,7 +50,10 @@ class LancamentosController extends AppController
                 $data
             );
 
+
             if ($lancamentosTable->save($lancamento)) {
+
+
                 $this->Flash->success('Lançamento criado');
 
                 return $this->redirect([

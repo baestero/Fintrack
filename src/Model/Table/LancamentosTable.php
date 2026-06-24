@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -81,11 +82,6 @@ class LancamentosTable extends Table
             ->decimal('valor')
             ->requirePresence('valor', 'create')
             ->notEmptyString('valor');
-
-        $validator
-            ->scalar('observacao')
-            ->requirePresence('observacao', 'create')
-            ->notEmptyString('observacao');
 
         $validator
             ->boolean('recorrente')

@@ -17,11 +17,6 @@
 <?= $this->Form->control('valor') ?>
 
 
-
-<?= $this->Form->control('recorrente', [
-  'type' => 'checkbox'
-]) ?> -->
-
 <br>
 
 <button type="submit">Salvar</button>

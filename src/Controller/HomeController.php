@@ -6,6 +6,7 @@ namespace App\Controller;
 
 class HomeController extends AppController
 {
+
     public function index()
     {
         $lancamentosTable = $this->fetchTable('Lancamentos');
@@ -13,7 +14,8 @@ class HomeController extends AppController
 
         $this->viewBuilder()->setLayout('home');
 
-        // Lista de meses (select)
+        $userId = $this->request->getAttribute('identity')->get('id');
+
         $meses = $mesesTable->find('list', [
             'keyField' => 'id',
             'valueField' => function ($row) {
@@ -21,7 +23,9 @@ class HomeController extends AppController
                     $row->data_referencia->i18nFormat('MMMM / yyyy')
                 );
             }
-        ])->toArray();
+        ])
+            ->where(['user_id' => $userId])
+            ->toArray();
 
         $session = $this->request->getSession();
         $mesId = $session->read('Mes.ativo');
@@ -33,10 +37,9 @@ class HomeController extends AppController
         $lancamentosReceber = [];
         $lancamentosPagar = [];
 
-        // Valida se o mês existe
         if ($mesId) {
             $mes = $mesesTable->find()
-                ->where(['id' => $mesId])
+                ->where(['id' => $mesId, 'user_id' => $userId])
                 ->first();
 
             if (!$mes) {
@@ -45,9 +48,9 @@ class HomeController extends AppController
             }
         }
 
-        // Se não tem mês válido, pega o mais recente
         if (!$mes) {
             $mes = $mesesTable->find()
+                ->where(['user_id' => $userId])
                 ->orderDesc('id')
                 ->first();
 
@@ -62,6 +65,7 @@ class HomeController extends AppController
             $receber = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
+                    'user_id' => $userId,
                     'tipo' => 'receber',
                     'concluido' => false
                 ])
@@ -71,6 +75,7 @@ class HomeController extends AppController
             $pagar = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
+                    'user_id' => $userId,
                     'tipo' => 'pagar',
                     'concluido' => false
                 ])
@@ -82,6 +87,7 @@ class HomeController extends AppController
             $lancamentosReceber = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
+                    'user_id' => $userId,
                     'tipo' => 'receber'
                 ])
                 ->order(['id' => 'ASC'])
@@ -90,6 +96,7 @@ class HomeController extends AppController
             $lancamentosPagar = $lancamentosTable->find()
                 ->where([
                     'mes_id' => $mesId,
+                    'user_id' => $userId,
                     'tipo' => 'pagar'
                 ])
                 ->order(['id' => 'ASC'])

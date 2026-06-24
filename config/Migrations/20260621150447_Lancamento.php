@@ -2,116 +2,45 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+use Migrations\AbstractMigration;
 
-class HomeController extends AppController
+class Lancamento extends AbstractMigration
 {
-    public function index()
+
+    public function change(): void
     {
-        $lancamentosTable = $this->fetchTable('Lancamentos');
-        $mesesTable = $this->fetchTable('Meses');
 
-        $this->viewBuilder()->setLayout('home');
+        $table = $this->table('lancamentos');
 
-        $userId = $this->request->getAttribute('identity')->get('id');
+        $table->addColumn('mes_id', 'integer', [
+            'null' => false
+        ]);
+        $table->addColumn('tipo', 'string', [
+            'null' => false,
+            'limit' => 20
+        ]);
+        $table->addColumn('descricao', 'string', [
+            'null' => false,
+            'limit' => 200
+        ]);
 
-        // Lista de meses do usuário logado (select)
-        $meses = $mesesTable->find('list', [
-            'keyField' => 'id',
-            'valueField' => function ($row) {
-                return ucfirst(
-                    $row->data_referencia->i18nFormat('MMMM / yyyy')
-                );
-            }
-        ])
-            ->where(['user_id' => $userId])
-            ->toArray();
+        $table->addColumn('concluido', 'boolean', [
+            'default' => false
+        ]);
 
-        $session = $this->request->getSession();
-        $mesId = $session->read('Mes.ativo');
+        $table->addColumn('valor', 'decimal', [
+            'precision' => 10,
+            'scale' => 2,
+            'null' => false
 
-        $mes = null;
-        $receber = 0;
-        $pagar = 0;
-        $saldo = 0;
-        $lancamentosReceber = [];
-        $lancamentosPagar = [];
+        ]);
 
-        // Valida se o mês existe E pertence ao usuário logado
-        if ($mesId) {
-            $mes = $mesesTable->find()
-                ->where([
-                    'id' => $mesId,
-                    'user_id' => $userId
-                ])
-                ->first();
+        $table->addColumn('recorrente', 'boolean', [
+            'default' => false
+        ]);
 
-            if (!$mes) {
-                $session->delete('Mes.ativo');
-                $mesId = null;
-            }
-        }
-
-        // Se não tem mês válido, pega o mais recente do usuário logado
-        if (!$mes) {
-            $mes = $mesesTable->find()
-                ->where(['user_id' => $userId])
-                ->orderDesc('id')
-                ->first();
-
-            if ($mes) {
-                $mesId = $mes->id;
-                $session->write('Mes.ativo', $mesId);
-            }
-        }
-
-        if ($mesId && $mes) {
-
-            $receber = $lancamentosTable->find()
-                ->where([
-                    'mes_id' => $mesId,
-                    'tipo' => 'receber',
-                    'concluido' => false
-                ])
-                ->all()
-                ->sumOf('valor');
-
-            $pagar = $lancamentosTable->find()
-                ->where([
-                    'mes_id' => $mesId,
-                    'tipo' => 'pagar',
-                    'concluido' => false
-                ])
-                ->all()
-                ->sumOf('valor');
-
-            $saldo = $receber - $pagar;
-
-            $lancamentosReceber = $lancamentosTable->find()
-                ->where([
-                    'mes_id' => $mesId,
-                    'tipo' => 'receber'
-                ])
-                ->order(['id' => 'ASC'])
-                ->toArray();
-
-            $lancamentosPagar = $lancamentosTable->find()
-                ->where([
-                    'mes_id' => $mesId,
-                    'tipo' => 'pagar'
-                ])
-                ->order(['id' => 'ASC'])
-                ->toArray();
-        }
-
-        $this->set(compact(
-            'receber',
-            'pagar',
-            'saldo',
-            'mes',
-            'meses',
-            'lancamentosReceber',
-            'lancamentosPagar'
-        ));
+        $table->addForeignKey('mes_id', 'meses', 'id');
+        $table->addTimestamps();
+        $table->create();
     }
 }

@@ -10,7 +10,10 @@ class MesesController extends AppController
     {
         $mesesTable = $this->fetchTable('Meses');
 
+        $userId = $this->request->getAttribute('identity')->get('id');
+
         $meses = $mesesTable->find()
+            ->where(['user_id' => $userId])
             ->order(['data_referencia' => 'DESC']);
 
         $mesesNavbar = $mesesTable->find('list', [
@@ -20,7 +23,9 @@ class MesesController extends AppController
                     $row->data_referencia->i18nFormat('MMMM / yyyy')
                 );
             }
-        ])->toArray();
+        ])
+            ->where(['user_id' => $userId])
+            ->toArray();
 
         $this->set(compact('meses', 'mesesNavbar'));
     }
@@ -58,13 +63,19 @@ class MesesController extends AppController
         $this->set(compact('mes'));
     }
 
+
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
 
         $mesesTable = $this->fetchTable('Meses');
 
-        $mes = $mesesTable->get($id);
+        $userId = $this->request->getAttribute('identity')->get('id');
+
+        // ❌ era: $mesesTable->get($id) — qualquer usuário podia deletar qualquer mês
+        $mes = $mesesTable->find()
+            ->where(['id' => $id, 'user_id' => $userId])
+            ->firstOrFail();
 
         if ($mesesTable->delete($mes)) {
             $this->Flash->success('Mês removido com sucesso.');
@@ -79,6 +90,20 @@ class MesesController extends AppController
     {
         $mesId = $this->request->getData('mes_id');
 
+        $mesesTable = $this->fetchTable('Meses');
+
+        $userId = $this->request->getAttribute('identity')->get('id');
+
+
+        $mes = $mesesTable->find()
+            ->where(['id' => $mesId, 'user_id' => $userId])
+            ->first();
+
+        if (!$mes) {
+            $this->Flash->error('Mês não encontrado.');
+            return $this->redirect(['action' => 'index']);
+        }
+
         $this->request->getSession()->write('Mes.ativo', $mesId);
 
         return $this->redirect([
@@ -92,33 +117,33 @@ class MesesController extends AppController
         $mesesTable = $this->fetchTable('Meses');
         $lancamentosTable = $this->fetchTable('Lancamentos');
 
-        $mesAtual = $mesesTable->get($id, [
-            'contain' => ['Lancamentos']
-        ]);
+        $userId = $this->request->getAttribute('identity')->get('id');
+
+        $mesAtual = $mesesTable->find()
+            ->where(['id' => $id, 'user_id' => $userId])
+            ->contain(['Lancamentos'])
+            ->firstOrFail();
 
         $novaData = (new \DateTime($mesAtual->data_referencia->format('Y-m-d')))
             ->modify('+1 month')
             ->format('Y-m-01');
 
         $novoMes = $mesesTable->newEntity([
-            'user_id' => $mesAtual->user_id,
+            'user_id' => $userId,
             'data_referencia' => $novaData
         ]);
 
         if (!$mesesTable->save($novoMes)) {
             $this->Flash->error('Erro ao criar o novo mês');
-
             return $this->redirect(['action' => 'index']);
         }
 
         foreach ($mesAtual->lancamentos as $l) {
-
             $novoLancamento = $lancamentosTable->newEntity([
                 'mes_id' => $novoMes->id,
                 'tipo' => $l->tipo,
                 'descricao' => $l->descricao,
                 'valor' => $l->valor,
-                'observacao' => $l->observacao,
                 'recorrente' => $l->recorrente,
                 'concluido' => false,
                 'data_pagamento' => null
@@ -136,9 +161,12 @@ class MesesController extends AppController
     {
         $mesesTable = $this->fetchTable('Meses');
 
-        $mes = $mesesTable->get($id, [
-            'contain' => ['Lancamentos']
-        ]);
+        $userId = $this->request->getAttribute('identity')->get('id');
+
+        $mes = $mesesTable->find()
+            ->where(['id' => $id, 'user_id' => $userId])
+            ->contain(['Lancamentos'])
+            ->firstOrFail();
 
         $this->set(compact('mes'));
     }
