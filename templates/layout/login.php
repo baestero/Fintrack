@@ -29,7 +29,7 @@ $cakeDescription = 'Fintrack';
   <nav class="top-nav">
     <div class="top-nav-inner">
       <div class="top-nav-title">
-        <a><span>Fin</span>Track</a>
+        <a href="/"><span>Fin</span>Track</a>
       </div>
     </div>
   </nav>

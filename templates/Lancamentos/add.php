@@ -1,3 +1,5 @@
+<?= $this->Html->css('lancamentos', ['block' => true]); ?>
+
 <h3>Novo Lançamento</h3>
 
 <?= $this->Form->create($lancamento) ?>
@@ -14,11 +16,11 @@
 
 <?= $this->Form->control('valor') ?>
 
-<?= $this->Form->control('observacao') ?>
+
 
 <?= $this->Form->control('recorrente', [
   'type' => 'checkbox'
-]) ?>
+]) ?> -->
 
 <br>
 

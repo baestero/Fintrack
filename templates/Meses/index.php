@@ -1,5 +1,9 @@
-<h2>Meses</h2>
-<a href="/meses/add" class="button">+</a>
+<?= $this->Html->css('meses', ['block' => true]); ?>
+
+<div class="meses-container">
+  <h2>Meses</h2>
+  <a href="/meses/add" class="button">+</a>
+</div>
 
 <table>
   <thead>

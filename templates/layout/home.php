@@ -29,45 +29,12 @@ $cakeDescription = 'Fintrack';
       </div>
 
       <div class="top-nav-links">
-
-        <div class="mes-select">
-
-          <?= $this->Html->image('calendar.svg') ?>
-
-
-          <?= $this->Form->create(null, [
-            'url' => ['controller' => 'Meses', 'action' => 'setAtivo']
-          ]) ?>
-          <?= $this->Form->control('mes_id', [
-            'type' => 'select',
-            'options' => $meses,
-            'value' => $mes ? $mes->id : null,
-            'label' => '',
-            'empty' => 'Nenhum mês selecionado — crie um mês para começar',
-            'onchange' => 'this.form.submit()'
-          ]) ?>
-          <?= $this->Form->end() ?>
-
-        </div>
-
-        <div class="button-nav">
-          <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'add']) ?>">
-            Novo lançamento
-          </a>
-        </div>
-        <div class="button-nav">
-          <a href="<?= $this->Url->build(['controller' => 'Meses', 'action' => 'index']) ?>">
-            Gerenciar Meses
-          </a>
-        </div>
-        <div class="button-nav">
+        <div>
           <?= $this->Html->link(
             'Sair',
             ['controller' => 'Users', 'action' => 'logout']
           ) ?>
         </div>
-
-
       </div>
   </nav>
   <main class="main">

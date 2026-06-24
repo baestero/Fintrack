@@ -10,6 +10,7 @@ $cakeDescription = 'Fintrack';
   <title>
     <?= $cakeDescription ?>:
     <?= $this->fetch('title') ?>
+    $this->Html->css('login', ['block' => true]);
   </title>
 
   <?= $this->Html->meta(
@@ -39,14 +40,14 @@ $cakeDescription = 'Fintrack';
       </div>
     </div>
   </nav>
+
   <main class="main">
     <div class="container">
       <?= $this->Flash->render() ?>
       <?= $this->fetch('content') ?>
     </div>
   </main>
-  <footer>
-  </footer>
+
 </body>
 
 </html>

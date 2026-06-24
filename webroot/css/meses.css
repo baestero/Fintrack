@@ -1,0 +1,9 @@
+h2 {
+    margin-bottom: 20px;
+}
+
+.meses-container {
+    display: flex;
+    align-content: center;
+    gap: 20px;
+}

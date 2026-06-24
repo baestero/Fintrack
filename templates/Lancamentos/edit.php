@@ -1,4 +1,6 @@
-<h1>✏️ Editar Lançamento</h1>
+<?= $this->Html->css('lancamentos', ['block' => true]); ?>
+
+<h3>Editar Lançamento</h3>
 
 <?= $this->Form->create($lancamento) ?>
 
@@ -14,9 +16,8 @@
 
 <?= $this->Form->control('valor') ?>
 
-<?= $this->Form->control('observacao') ?>
 
-<?= $this->Form->control('recorrente') ?>
+<!-- <?= $this->Form->control('recorrente') ?> -->
 
 <br>
 

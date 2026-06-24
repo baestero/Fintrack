@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Lancamento;
 
 class LancamentosController extends AppController
 {
@@ -43,7 +42,7 @@ class LancamentosController extends AppController
             $data['mes_id'] = $mesAtivo;
             $data['recorrente'] = !empty($data['recorrente']) ? 1 : 0;
             $data['valor'] = (float) $data['valor'];
-            $data['status'] = 'pendente';
+            $data['concluido'] = false;
 
 
             $lancamento = $this->Lancamentos->patchEntity($lancamento, $data);
@@ -108,7 +107,7 @@ class LancamentosController extends AppController
 
         $lancamento = $this->Lancamentos->get($id);
 
-        $lancamento->status = 'concluido';
+        $lancamento->concluido = true;
         $lancamento->data_pagamento = date('Y-m-d');
 
         $this->Lancamentos->save($lancamento);
@@ -122,7 +121,7 @@ class LancamentosController extends AppController
 
         $lancamento = $this->Lancamentos->get($id);
 
-        $lancamento->status = 'pendente';
+        $lancamento->concluido = false;
         $lancamento->data_pagamento = null;
 
         $this->Lancamentos->save($lancamento);

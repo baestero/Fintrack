@@ -33,7 +33,7 @@ class HomeController extends AppController
         $lancamentosReceber = [];
         $lancamentosPagar = [];
 
-        // 🔥 VALIDA SE O MÊS EXISTE
+        // VALIDA SE O MÊS EXISTE
         if ($mesId) {
             $mes = $this->Meses->find()
                 ->where(['id' => $mesId])
@@ -46,7 +46,7 @@ class HomeController extends AppController
             }
         }
 
-        // 🔥 SE NÃO TEM MÊS VÁLIDO, PEGA O MAIS RECENTE
+        //  SE NÃO TEM MÊS VÁLIDO, PEGA O MAIS RECENTE
         if (!$mes) {
             $mes = $this->Meses->find()
                 ->orderDesc('id')
@@ -62,11 +62,19 @@ class HomeController extends AppController
         if ($mesId && $mes) {
 
             $receber = $this->Lancamentos->find()
-                ->where(['mes_id' => $mesId, 'tipo' => 'receber'])
+                ->where([
+                    'mes_id' => $mesId,
+                    'tipo' => 'receber',
+                    'concluido' => false
+                ])
                 ->sumOf('valor');
 
             $pagar = $this->Lancamentos->find()
-                ->where(['mes_id' => $mesId, 'tipo' => 'pagar'])
+                ->where([
+                    'mes_id' => $mesId,
+                    'tipo' => 'pagar',
+                    'concluido' => false
+                ])
                 ->sumOf('valor');
 
             $saldo = $receber - $pagar;
