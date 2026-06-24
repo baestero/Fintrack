@@ -49,6 +49,12 @@ class UsersController extends AppController
 
     $user = $this->Users->newEmptyEntity();
 
+
+    debug($user->getErrors());
+    debug($user);
+    die;
+
+
     if ($this->request->is('post')) {
 
       $user = $this->Users->patchEntity($user, $this->request->getData());
@@ -60,10 +66,6 @@ class UsersController extends AppController
         return $this->redirect(['action' => 'login']);
       }
 
-
-      debug($user->getErrors());
-      debug($user);
-      die;
 
       $this->Flash->error(__('Não foi possível cadastrar usuário, verifique os erros abaixo.'));
     }
