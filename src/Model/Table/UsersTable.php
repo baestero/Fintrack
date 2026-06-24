@@ -40,6 +40,14 @@ class UsersTable extends Table
         $this->setTable('users');
         $this->setDisplayField('username');
         $this->setPrimaryKey('id');
+        $this->addBehavior('Timestamp', [
+            'events' => [
+                'Model.beforeSave' => [
+                    'created_at' => 'new',
+                    'updated_at' => 'always',
+                ]
+            ]
+        ]);
     }
 
     /**
@@ -62,14 +70,6 @@ class UsersTable extends Table
             ->maxLength('password', 255)
             ->requirePresence('password', 'create')
             ->notEmptyString('password');
-
-        $validator
-            ->dateTime('created_at')
-            ->notEmptyDateTime('created_at');
-
-        $validator
-            ->dateTime('updated_at')
-            ->allowEmptyDateTime('updated_at');
 
         return $validator;
     }
