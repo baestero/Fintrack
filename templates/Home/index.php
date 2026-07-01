@@ -4,8 +4,8 @@
 
    <div class="mes-select">
 
-     <?= $this->Html->image('calendar.svg') ?>
 
+     <?= $this->Html->image('calendar.svg') ?>
 
      <?= $this->Form->create(null, [
         'url' => ['controller' => 'Meses', 'action' => 'setAtivo']
@@ -20,17 +20,21 @@
       ]) ?>
      <?= $this->Form->end() ?>
 
+
    </div>
 
    <div class="home-button-nav">
-     <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'add']) ?>">
-       Novo lançamento
-     </a>
-   </div>
-   <div class="home-button-nav">
-     <a href="<?= $this->Url->build(['controller' => 'Meses', 'action' => 'index']) ?>">
-       Gerenciar Meses
-     </a>
+     <div>
+       <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'add']) ?>">
+         Novo lançamento
+       </a>
+     </div>
+
+     <div>
+       <a href="<?= $this->Url->build(['controller' => 'Meses', 'action' => 'index']) ?>">
+         Gerenciar Meses
+       </a>
+     </div>
    </div>
  </div>
 
@@ -116,8 +120,6 @@
          </tr>
        <?php endforeach; ?>
      </table>
-
-
    </div>
 
 
