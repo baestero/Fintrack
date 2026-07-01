@@ -86,9 +86,8 @@ class MesesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function setAtivo()
+    public function setAtivo($mesId)
     {
-        $mesId = $this->request->getData('mes_id');
 
         $mesesTable = $this->fetchTable('Meses');
 
