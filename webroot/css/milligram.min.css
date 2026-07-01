@@ -260,6 +260,7 @@ input[type="radio"] {
     padding: 0;
     position: relative;
     width: 100%;
+    padding: 0 20px;
 }
 .row {
     display: flex;

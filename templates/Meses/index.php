@@ -15,21 +15,24 @@
 
   <tbody>
     <?php foreach ($meses as $mes): ?>
-      <tr>
+    <tr>
 
-        <td>
-          <?= $mes->data_referencia->i18nFormat('MM/yyyy') ?>
-        </td>
+      <td>
+        <?= $mes->data_referencia->i18nFormat('MM/yyyy') ?>
+      </td>
 
 
-        <td>
-          <?= $this->Html->link(
+      <td>
+        <?= $this->Form->postLink(
             'Selecionar',
-            ['action' => 'setAtivo', $mes->id],
-            ['class' => 'button']
+            ['action' => 'setAtivo'],
+            [
+              'data' => ['mes_id' => $mes->id],
+              'class' => 'button'
+            ]
           ) ?>
 
-          <?= $this->Form->postLink(
+        <?= $this->Form->postLink(
             'Deletar',
             ['action' => 'delete', $mes->id],
             [
@@ -37,8 +40,8 @@
               'class' => 'button'
             ]
           ) ?>
-        </td>
-      </tr>
+      </td>
+    </tr>
     <?php endforeach; ?>
   </tbody>
 </table>
