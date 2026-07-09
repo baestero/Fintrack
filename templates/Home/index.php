@@ -74,98 +74,94 @@
 
  <hr>
 
- <div class="lancamentos-mes">
+ <h3 class="title-h3">Lançamentos do mês</h3>
 
-   <h3>Lançamentos do mês</h3>
+ <div class="lancamentos-mes-container">
 
 
    <div>
      <h4>A Pagar</h4>
 
-     <table border="1" cellpadding="8">
-       <tr>
-         <th>Descrição</th>
-         <th>Valor</th>
-         <th>Status</th>
-         <th>Ações</th>
-       </tr>
+     <?php foreach ($lancamentosPagar as $l): ?>
 
-       <?php foreach ($lancamentosPagar as $l): ?>
-         <tr>
-           <td><?= h($l->descricao) ?></td>
-           <td>R$ <?= number_format($l->valor, 2, ',', '.') ?></td>
-           <td><?= h($l->concluido ? 'Pago' : 'Pendente') ?></td>
-           <td>
-             <?php if (!$l->concluido): ?>
-               <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'concluir', $l->id]) ?>">
-                 💰 Pagar
-               </a>
-             <?php else: ?>
-               <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'reabrir', $l->id]) ?>">
-                 ↩️ Reabrir
-               </a>
-             <?php endif; ?>
-             <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'edit', $l->id]) ?>">
-               🔧 Editar
-             </a>
-             <?= $this->Form->postLink(
-                '🗑 Apagar',
-                ['controller' => 'Lancamentos', 'action' => 'delete', $l->id],
-                [
-                  'confirm' => 'Tem certeza?',
-                  'class' => 'btn-delete'
-                ]
-              ) ?>
-           </td>
-         </tr>
-       <?php endforeach; ?>
-     </table>
+       <p><?= h($l->descricao) ?></p>
+
+       <p>R$ <?= number_format($l->valor, 2, ',', '.') ?></p>
+
+       <p><?= h($l->concluido ? 'Pago' : 'Pendente') ?></p>
+
+
+       <?php if (!$l->concluido): ?>
+         <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'concluir', $l->id]) ?>">
+           💰 Pagar
+         </a>
+       <?php else: ?>
+         <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'reabrir', $l->id]) ?>">
+           ↩️ Reabrir
+         </a>
+       <?php endif; ?>
+
+       <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'edit', $l->id]) ?>">
+         🔧 Editar
+       </a>
+
+       <?= $this->Form->postLink(
+          '🗑 Apagar',
+          ['controller' => 'Lancamentos', 'action' => 'delete', $l->id],
+          [
+            'confirm' => 'Tem certeza?',
+            'class' => 'btn-delete'
+          ]
+        ) ?>
+
+     <?php endforeach; ?>
    </div>
+ </div>
 
 
-   <div>
-     <h4>A Receber</h4>
+ <div class="lancamento">
+   <h4>A Receber</h4>
 
-     <table border="1" cellpadding="8">
+   <table border="1" cellpadding="8">
+     <tr>
+       <th>Descrição</th>
+       <th>Valor</th>
+       <th>Status</th>
+       <th>Ações</th>
+     </tr>
+
+     <?php foreach ($lancamentosReceber as $l): ?>
        <tr>
-         <th>Descrição</th>
-         <th>Valor</th>
-         <th>Status</th>
-         <th>Ações</th>
-       </tr>
-
-       <?php foreach ($lancamentosReceber as $l): ?>
-         <tr>
-           <td><?= h($l->descricao) ?></td>
-           <td>R$ <?= number_format($l->valor, 2, ',', '.') ?></td>
-           <td><?= h($l->concluido ? 'Pago' : 'Pendente') ?></td>
-           <td>
-             <?php if (!$l->concluido): ?>
-               <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'concluir', $l->id]) ?>">
-                 📥 Receber
-               </a>
-             <?php else: ?>
-               <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'reabrir', $l->id]) ?>">
-                 ↩️ Reabrir
-               </a>
-             <?php endif; ?>
-
-             <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'edit', $l->id]) ?>">
-               🔧 Editar
+         <td><?= h($l->descricao) ?></td>
+         <td>R$ <?= number_format($l->valor, 2, ',', '.') ?></td>
+         <td><?= h($l->concluido ? 'Pago' : 'Pendente') ?></td>
+         <td>
+           <?php if (!$l->concluido): ?>
+             <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'concluir', $l->id]) ?>">
+               📥 Receber
              </a>
-             <?= $this->Form->postLink(
-                '🗑️ Apagar',
-                ['controller' => 'Lancamentos', 'action' => 'delete', $l->id],
-                [
-                  'confirm' => 'Tem certeza?',
-                  'class' => 'btn-delete'
-                ]
-              ) ?>
-           </td>
-         </tr>
-       <?php endforeach; ?>
-     </table>
-   </div>
+           <?php else: ?>
+             <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'reabrir', $l->id]) ?>">
+               ↩️ Reabrir
+             </a>
+           <?php endif; ?>
+
+           <a href="<?= $this->Url->build(['controller' => 'Lancamentos', 'action' => 'edit', $l->id]) ?>">
+             🔧 Editar
+           </a>
+           <?= $this->Form->postLink(
+              '🗑️ Apagar',
+              ['controller' => 'Lancamentos', 'action' => 'delete', $l->id],
+              [
+                'confirm' => 'Tem certeza?',
+                'class' => 'btn-delete'
+              ]
+            ) ?>
+         </td>
+       </tr>
+     <?php endforeach; ?>
+   </table>
+ </div>
 
 
  </div>
