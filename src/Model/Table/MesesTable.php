@@ -47,6 +47,12 @@ class MesesTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
         ]);
+
+        $this->hasMany('Lancamentos', [
+            'foreignKey' => 'mes_id',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+        ]);
     }
 
     /**
@@ -87,6 +93,15 @@ class MesesTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn('user_id', 'Users'), ['errorField' => 'user_id']);
+
+        $rules->add(
+            $rules->isUnique(['user_id', 'data_referencia']),
+            'uniqueMes',
+            [
+                'errorField' => 'data_referencia',
+                'message' => 'Já existe um mês cadastrado para esse período.',
+            ]
+        );
 
         return $rules;
     }

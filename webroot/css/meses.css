@@ -4,6 +4,102 @@ h2 {
 
 .meses-container {
     display: flex;
-    align-content: center;
+    align-items: center;
+    justify-content: space-between;
     gap: 20px;
+}
+
+.meses-add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    font-size: 1.4rem;
+    line-height: 1;
+    border-radius: 6px;
+    background-color: #000000;
+    border: 1px solid #000000;
+    color: #ffffff;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.meses-add-btn:hover {
+    background-color: #232323;
+    color: #ffffff;
+}
+
+.meses-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.mes-card {
+    border: 1px solid rgb(209, 209, 209);
+    border-radius: 6px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mes-card-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.mes-data {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.mes-status {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.status-selecionado {
+    background: #dcfce7;
+    color: var(--success);
+}
+
+.status-nao-selecionado {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.mes-card-acoes {
+    display: flex;
+    gap: 10px;
+}
+
+.mes-card-acoes .button {
+    flex: 1;
+    height: auto;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: normal;
+    text-transform: none;
+    line-height: 1.4;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.meses-vazio {
+    color: #6b7280;
+}
+
+@media (max-width: 650px) {
+    .meses-cards {
+        grid-template-columns: 1fr;
+    }
 }

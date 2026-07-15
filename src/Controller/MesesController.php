@@ -27,7 +27,9 @@ class MesesController extends AppController
             ->where(['user_id' => $userId])
             ->toArray();
 
-        $this->set(compact('meses', 'mesesNavbar'));
+        $mesAtivoId = $this->request->getSession()->read('Mes.ativo');
+
+        $this->set(compact('meses', 'mesesNavbar', 'mesAtivoId'));
     }
 
     public function add()
@@ -57,7 +59,13 @@ class MesesController extends AppController
                 return $this->redirect(['action' => 'index']);
             }
 
-            $this->Flash->error('Erro ao criar mês');
+            $erroReferencia = $mes->getError('data_referencia');
+
+            if (!empty($erroReferencia)) {
+                $this->Flash->error(reset($erroReferencia));
+            } else {
+                $this->Flash->error('Erro ao criar mês');
+            }
         }
 
         $this->set(compact('mes'));

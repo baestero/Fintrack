@@ -55,7 +55,7 @@ td {
     width: 100%;
     background: #fff;
     border-bottom: 1px solid #e5e7eb;
-    padding: 20px;
+    padding: 20px 0;
     margin-bottom: 40px;
 }
 
@@ -64,7 +64,10 @@ td {
     align-items: center;
     justify-content: space-between;
     max-width: 112rem;
+    width: 100%;
     margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 .top-nav-title a {
