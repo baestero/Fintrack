@@ -55,15 +55,14 @@ class UsersController extends AppController
 
       $user = $this->Users->patchEntity($user, $data);
 
-      if ($this->Users->exists(['username' => $this->request->getData('username')])) {
-        $this->Flash->error('Username já está em uso.');
-        $this->set(compact('user'));
-        return;
-      }
-
       if ($this->Users->save($user)) {
         $this->Flash->success(__('Usuário cadastrado com sucesso.'));
         return $this->redirect(['action' => 'login']);
+      }
+
+      $errors = $user->getError('username');
+      if (!empty($errors)) {
+        $this->Flash->error(current($errors));
       }
     }
 

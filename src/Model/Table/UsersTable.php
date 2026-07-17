@@ -85,7 +85,7 @@ class UsersTable extends Table
     {
         $rules->add($rules->isUnique(['username']), [
             'errorField' => 'username',
-            'Este nome de usuário já está em uso'
+            'message' => 'Este nome de usuário já está em uso',
         ]);
 
         return $rules;
