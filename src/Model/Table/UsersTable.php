@@ -62,7 +62,13 @@ class UsersTable extends Table
             ->scalar('username')
             ->maxLength('username', 100)
             ->requirePresence('username', 'create')
-            ->notEmptyString('username');
+            ->notEmptyString('username')
+            ->add('username', 'noSpaces', [
+                'rule' => function ($value) {
+                    return strpos((string)$value, ' ') === false;
+                },
+                'message' => 'Nome de usuário não pode conter espaços.',
+            ]);
 
 
         $validator
