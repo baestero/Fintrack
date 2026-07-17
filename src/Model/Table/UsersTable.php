@@ -83,7 +83,10 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->isUnique(['username']), ['errorField' => 'username']);
+        $rules->add($rules->isUnique(['username']), [
+            'errorField' => 'username',
+            'Este nome de usuário já está em uso'
+        ]);
 
         return $rules;
     }
