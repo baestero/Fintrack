@@ -18,7 +18,7 @@
 <?= $this->Form->create($user) ?>
 
 <?php
-echo $this->Form->control('username', ['label' => 'Usuário']);
+echo $this->Form->control('username', ['label' => 'Usuário', 'error' => false]);
 echo $this->Form->control('password', [
   'label' => 'Senha'
 ]);

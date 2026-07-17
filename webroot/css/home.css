@@ -43,6 +43,10 @@
     gap: 2.5px;
 }
 
+.mes-select .input {
+    margin-bottom: 0;
+}
+
 .status-financas-container {
     display: flex;
     gap: 20px;

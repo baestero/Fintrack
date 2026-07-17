@@ -1,24 +1,25 @@
-<h3>Novo Lançamento</h3>
-
 <?= $this->Html->css('lancamentos', ['block' => true]); ?>
 
-<?= $this->Form->create($lancamento) ?>
+<div class="form-page">
+  <div class="form-card">
+    <h3>Novo Lançamento</h3>
 
-<?= $this->Form->control('descricao') ?>
+    <?= $this->Form->create($lancamento) ?>
 
-<?= $this->Form->control('tipo', [
-  'type' => 'select',
-  'options' => [
-    'receber' => 'Receber',
-    'pagar' => 'Pagar'
-  ]
-]) ?>
+    <?= $this->Form->control('descricao') ?>
 
-<?= $this->Form->control('valor') ?>
+    <?= $this->Form->control('tipo', [
+      'type' => 'select',
+      'options' => [
+        'receber' => 'Receber',
+        'pagar' => 'Pagar'
+      ]
+    ]) ?>
 
+    <?= $this->Form->control('valor') ?>
 
-<br>
+    <button type="submit">Salvar</button>
 
-<button type="submit">Salvar</button>
-
-<?= $this->Form->end() ?>
+    <?= $this->Form->end() ?>
+  </div>
+</div>

@@ -1,26 +1,27 @@
 <?= $this->Html->css('lancamentos', ['block' => true]); ?>
 
-<h3>Editar Lançamento</h3>
+<div class="form-page">
+  <div class="form-card">
+    <h3>Editar Lançamento</h3>
 
-<?= $this->Form->create($lancamento) ?>
+    <?= $this->Form->create($lancamento) ?>
 
-<?= $this->Form->control('descricao') ?>
+    <?= $this->Form->control('descricao') ?>
 
-<?= $this->Form->control('tipo', [
-  'type' => 'select',
-  'options' => [
-    'receber' => 'Receber',
-    'pagar' => 'Pagar'
-  ]
-]) ?>
+    <?= $this->Form->control('tipo', [
+      'type' => 'select',
+      'options' => [
+        'receber' => 'Receber',
+        'pagar' => 'Pagar'
+      ]
+    ]) ?>
 
-<?= $this->Form->control('valor') ?>
+    <?= $this->Form->control('valor') ?>
 
+    <!-- <?= $this->Form->control('recorrente') ?> -->
 
-<!-- <?= $this->Form->control('recorrente') ?> -->
+    <button type="submit">Atualizar</button>
 
-<br>
-
-<button type="submit">Atualizar</button>
-
-<?= $this->Form->end() ?>
+    <?= $this->Form->end() ?>
+  </div>
+</div>

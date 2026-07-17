@@ -28,17 +28,13 @@ $cakeDescription = 'Fintrack';
 </head>
 
 <body>
-  <nav class="top-nav">
-    <div class="top-nav-inner">
-      <div class="top-nav-title">
-        <a href="/"><span>Fin</span>Track</a>
-      </div>
-    </div>
-  </nav>
+  <?= $this->element('topnav', ['showLogout' => false]) ?>
   <main class="main">
-    <div class="container">
-      <?= $this->Flash->render() ?>
-      <?= $this->fetch('content') ?>
+    <div class="container form-page">
+      <div class="form-card">
+        <?= $this->Flash->render() ?>
+        <?= $this->fetch('content') ?>
+      </div>
     </div>
   </main>
   <footer>

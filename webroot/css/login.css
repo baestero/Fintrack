@@ -1,6 +1,20 @@
-.login-container h2 {
-    margin-bottom: 20px;
+.form-card .message {
+    margin-bottom: 1.8rem;
 }
+
+.login-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-container h2 {
+    font-size: var(--font-size-lg);
+    margin-bottom: 8px;
+}
+
 .login-container h4 {
-    margin-bottom: 20px;
+    font-size: var(--font-size-base);
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-bottom: 0;
 }
