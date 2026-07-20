@@ -14,7 +14,7 @@ $cakeDescription = 'Fintrack';
 
   <?= $this->Html->meta(
     'icon',
-    '/img/finance.svg',
+    '/img/fintrack-icon-black.svg',
     ['type' => 'image/svg+xml']
   ) ?>
 

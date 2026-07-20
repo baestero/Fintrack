@@ -109,13 +109,13 @@ td {
 }
 
 .top-nav-title a {
-    font-size: var(--font-size-xl);
-    font-weight: bold;
-    color: #111111;
+    display: block;
 }
 
-.top-nav-title span {
-    color: #111111;
+.top-nav-logo {
+    display: block;
+    height: 48px;
+    width: auto;
 }
 .top-nav-links {
     display: flex;

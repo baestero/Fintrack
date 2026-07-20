@@ -4,7 +4,7 @@ $showLogout = $showLogout ?? true;
 <nav class="top-nav">
   <div class="top-nav-inner">
     <div class="top-nav-title">
-      <a href="/"><span>Fin</span>Track</a>
+      <a href="/"><img src="/img/fintrack-wordmark-black.svg" alt="FinTrack" class="top-nav-logo"></a>
     </div>
     <?php if ($showLogout): ?>
       <div class="top-nav-links">
