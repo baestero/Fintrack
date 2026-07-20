@@ -65,7 +65,7 @@ class HomeController extends AppController
                 ->where([
                     'mes_id' => $mesId,
                     'tipo' => 'receber',
-                    'concluido' => false
+                    'concluido' => false,
                 ])
                 ->all()
                 ->sumOf('valor');
@@ -86,7 +86,7 @@ class HomeController extends AppController
                     'mes_id' => $mesId,
                     'tipo' => 'receber'
                 ])
-                ->order(['id' => 'ASC'])
+                ->order(['concluido' => 'ASC', 'created_at' => 'ASC'])
                 ->toArray();
 
             $lancamentosPagar = $lancamentosTable->find()
@@ -94,7 +94,7 @@ class HomeController extends AppController
                     'mes_id' => $mesId,
                     'tipo' => 'pagar'
                 ])
-                ->order(['id' => 'ASC'])
+                ->order(['concluido' => 'ASC', 'created_at' => 'ASC'])
                 ->toArray();
         }
 
