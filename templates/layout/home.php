@@ -19,6 +19,8 @@ $cakeDescription = 'Fintrack';
     ['type' => 'image/svg+xml']
   ) ?>
 
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+
 
   <?= $this->Html->css(['normalize.min', 'milligram.min', 'fonts', 'cake']) ?>
 
